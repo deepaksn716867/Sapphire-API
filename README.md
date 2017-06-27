@@ -14,10 +14,10 @@ Import data to Mongo DB from the data folder of the project.
 ```
 command: mongorestore --db appdb --drop
 
-* ex : mongorestore --db appdb --drop ..\appworks\database\appdb\ *
+ex : mongorestore --db appdb --drop ..\appworks\database\appdb\
 ```
 
-It is a maven java web application project. To build the project run
+It is a maven java web application project. To build the project run the command from the location of *pom file*
 ```
 mvn clean install
 ```
