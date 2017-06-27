@@ -1,2 +1,13 @@
 # Sapphire-API
 A Level-2 Rest API(Java Apache Jersey) for the Appworks Sapphire project. The API handles the CRUD operations of the Angular UI.
+
+Required Dependencies :
+1. Maven
+2. Java 8
+3. Servlet Container (Tomcat/Jboss).
+
+
+It is a maven java web application project. To build the project run
+mvn clean install
+
+After successfully building the project. The war file can be found in the target directory.
