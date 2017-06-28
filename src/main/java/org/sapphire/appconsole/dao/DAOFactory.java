@@ -27,8 +27,8 @@ public abstract class DAOFactory {
 	public static final int MONGO = 0;
 	
 	public abstract AppDao getAppDAO() throws Exception;
-	public abstract LayoutDao getLayoutDAO();
-	public abstract WidgetDao getWidgetDAO();
+	public abstract LayoutDao getLayoutDAO() throws Exception;
+	public abstract WidgetDao getWidgetDAO() throws Exception;
 	public abstract WidgetSettingOptionDao getWidgetSettingOptionDAO();
 	private final static Logger LOG = Logger.getLogger(DAOFactory.class) ;
 	

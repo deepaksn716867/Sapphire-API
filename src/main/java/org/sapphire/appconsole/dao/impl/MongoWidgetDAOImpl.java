@@ -4,9 +4,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.core.Response;
+
 import org.apache.log4j.Logger;
+import org.sapphire.appconsole.dao.DAOFactory;
 import org.sapphire.appconsole.dao.WidgetDao;
 import org.sapphire.appconsole.dao.exception.ResourceNotFoundException;
+import org.sapphire.appconsole.errorHandler.AppExceptionMapper;
+import org.sapphire.appconsole.errorHandler.ErrorHandler;
 import org.sapphire.appconsole.model.EventActionType;
 import org.sapphire.appconsole.model.EventOptionType;
 import org.sapphire.appconsole.model.UIComponent;
@@ -16,6 +21,34 @@ import org.codehaus.jackson.map.DeserializationConfig.Feature;
 import org.codehaus.jackson.map.ObjectMapper;
 
 public class MongoWidgetDAOImpl extends BaseDao implements WidgetDao {
+	
+	/**
+	 * This is the constructor for instantiating the database connection object. 
+	 * @throws Exception
+	 */
+	public MongoWidgetDAOImpl() throws Exception
+	{
+		String dbName = DAOFactory.getDAOProperties().getProperty("dbName");
+		String host = DAOFactory.getDAOProperties().getProperty("hostName");
+		
+		if(dbName == null || host == null || dbName.isEmpty() || host.isEmpty())
+		{
+			try 
+			{
+				throw new AppExceptionMapper(Response.Status.INTERNAL_SERVER_ERROR,new ObjectMapper()
+						                    .writeValueAsString(new ErrorHandler("Error While getting the Connection Object",500)));
+			} 
+			catch (Exception e) 
+			{
+				LOG.error("Unexpected error while throwing exception",e);
+				e.printStackTrace();
+				throw e;
+			}
+				// TODO Auto-generated catch block
+		}
+		
+		mongodatasourceprovider = new MongoDataSourceProvider(dbName,host);
+	}
 
 	private final static Logger LOG = Logger.getLogger(MongoWidgetDAOImpl.class) ;
 

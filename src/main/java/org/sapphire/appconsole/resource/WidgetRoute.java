@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.sapphire.appconsole.resource;
 
 import javax.ws.rs.GET;
@@ -12,35 +9,32 @@ import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 import org.sapphire.appconsole.service.SapphireService;
 
-/**
- * @author deepak
- *
- */
-@Path("/app/")
-public class AppRoute {
-	
-	private final static Logger LOG = Logger.getLogger(AppRoute.class) ;
+@Path("/widget/")
+public class WidgetRoute {
 
 	/**
-	 * Constructor
+	 * This class is for the Widget route 
+	 * @author deepak
 	 */
-	public AppRoute() {
+	public WidgetRoute() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	private final static Logger LOG = Logger.getLogger(WidgetRoute.class) ;
 	
 	@GET
 	@Path("/search/")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response appRouteSearch() throws Exception
+	public Response widgetRouteSearch() throws Exception
 	{
-		LOG.info("Request Received for /app/search");
+		LOG.info("Request Received for /widget/search");
 		
 		Response response = null;
 		SapphireService service = SapphireService.getSapphireServiceInstance();
-		String appSearchjson = "";
+		String widgetSearchjson = "";
 		try
 		{
-			appSearchjson = service.appRouteSearch();
+			widgetSearchjson = service.widgetRouteSearch();
 		}
 		catch(Exception e)
 		{
@@ -49,9 +43,9 @@ public class AppRoute {
 			throw e;
 		}
 		
-		LOG.debug("The search result is::"+appSearchjson);
+		LOG.debug("The widget search result is::"+widgetSearchjson);
 		
-		response = Response.status(Response.Status.OK).entity(appSearchjson).build();
+		response = Response.status(Response.Status.OK).entity(widgetSearchjson).build();
         return response;
 	}
 

@@ -29,13 +29,13 @@ public class MongoDAOFactory extends DAOFactory{
 	}
 
 	@Override
-	public LayoutDao getLayoutDAO() {
+	public LayoutDao getLayoutDAO() throws Exception{
 		// TODO Auto-generated method stub
 		return new MongoLayoutDAOImpl();
 	}
 
 	@Override
-	public WidgetDao getWidgetDAO() {
+	public WidgetDao getWidgetDAO() throws Exception{
 		// TODO Auto-generated method stub
 		return new MongoWidgetDAOImpl();
 	}
