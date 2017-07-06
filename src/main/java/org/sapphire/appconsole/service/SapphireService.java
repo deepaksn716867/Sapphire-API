@@ -170,5 +170,88 @@ public class SapphireService {
 		
 		return layoutSearchList;
 	}
+	
+	/**
+	 * This is the service method for handling the widget eventoption route
+	 * @return widgetEventOption - A JSON string with the widget event option
+	 * @throws Exception
+	 */
+	public String widgetRouteEventOption() throws Exception
+	{
+		if(factory == null)
+		{
+			LOG.error("Error while instantiating the factory object");
+			ObjectMapper mapper = new ObjectMapper();
+			
+			String JsonErrorMessage = "";
+			try 
+			{
+				JsonErrorMessage = mapper.writeValueAsString(new ErrorHandler("Unexpected error while"
+																	+ "instantiating factory object",500));
+			} 
+			catch(Exception e)
+			{
+				LOG.error("Json write error in SapphireService::widgetRouteEventOption::Line No 194",e);
+				e.printStackTrace();
+			}
+			
+			throw new AppExceptionMapper(Response.Status.INTERNAL_SERVER_ERROR,JsonErrorMessage);
+		}
+		
+		WidgetDao widgetDAO = factory.getWidgetDAO();
+		String widgetEventOption = null;
+		try 
+		{
+			ObjectMapper mapper = new ObjectMapper();
+			widgetEventOption = mapper.writeValueAsString(widgetDAO.getEventOptions());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			LOG.error("Json write error in SapphireService::widgetRouteEventAction::209",e);
+			e.printStackTrace();
+		}
+		
+		return widgetEventOption;
+	}
+	
+	/**
+	 * This is the service method for handling the widget eventaction route
+	 * @return widgetEventAction - A JSON string with the widget event action option
+	 * @throws Exception
+	 */
+	public String widgetRouteEventAction() throws Exception
+	{
+		if(factory == null)
+		{
+			LOG.error("Error while instantiating the factory object");
+			ObjectMapper mapper = new ObjectMapper();
+			
+			String JsonErrorMessage = "";
+			try 
+			{
+				JsonErrorMessage = mapper.writeValueAsString(new ErrorHandler("Unexpected error while"
+																	+ "instantiating factory object",500));
+			} 
+			catch(Exception e)
+			{
+				LOG.error("Json write error in SapphireService::widgetRouteEventAction::Line No 236",e);
+				e.printStackTrace();
+			}
+			
+			throw new AppExceptionMapper(Response.Status.INTERNAL_SERVER_ERROR,JsonErrorMessage);
+		}
+		
+		WidgetDao widgetDAO = factory.getWidgetDAO();
+		String widgetEventAction = null;
+		try 
+		{
+			ObjectMapper mapper = new ObjectMapper();
+			widgetEventAction = mapper.writeValueAsString(widgetDAO.getEventActions());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			LOG.error("Json write error in SapphireService::widgetRouteEventAction::251",e);
+			e.printStackTrace();
+		}
+		return widgetEventAction;
+	}
 
 }

@@ -48,5 +48,59 @@ public class WidgetRoute {
 		response = Response.status(Response.Status.OK).entity(widgetSearchjson).build();
         return response;
 	}
+	
+	@GET
+	@Path("/eventoptions/")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response widgetRouteEventOptions() throws Exception
+	{
+		LOG.info("Request Received for /widget/eventoptions");
+		
+		Response response = null;
+		SapphireService service = SapphireService.getSapphireServiceInstance();
+		String widgetEventOptionjson = "";
+		try
+		{
+			widgetEventOptionjson = service.widgetRouteEventOption();
+		}
+		catch(Exception e)
+		{
+			LOG.error("Unexpected error",e);
+			e.printStackTrace();
+			throw e;
+		}
+		
+		LOG.debug("The widget search result is::"+widgetEventOptionjson);
+		
+		response = Response.status(Response.Status.OK).entity(widgetEventOptionjson).build();
+        return response;
+	}
+	
+	@GET
+	@Path("/eventactions/")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response widgetRouteEventActions() throws Exception
+	{
+		LOG.info("Request Received for /widget/eventaction");
+		
+		Response response = null;
+		SapphireService service = SapphireService.getSapphireServiceInstance();
+		String widgetEventActionjson = "";
+		try
+		{
+			widgetEventActionjson = service.widgetRouteEventAction();
+		}
+		catch(Exception e)
+		{
+			LOG.error("Unexpected error",e);
+			e.printStackTrace();
+			throw e;
+		}
+		
+		LOG.debug("The widget eventaction result is::"+widgetEventActionjson);
+		
+		response = Response.status(Response.Status.OK).entity(widgetEventActionjson).build();
+        return response;
+	}
 
 }
