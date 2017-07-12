@@ -1,12 +1,9 @@
 package org.sapphire.appconsole.service;
 
-import java.io.IOException;
-
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
-import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -16,7 +13,6 @@ import org.sapphire.appconsole.dao.LayoutDao;
 import org.sapphire.appconsole.dao.WidgetDao;
 import org.sapphire.appconsole.errorHandler.AppExceptionMapper;
 import org.sapphire.appconsole.errorHandler.ErrorHandler;
-import org.codehaus.jackson.map.DeserializationConfig;
 
 
 /**
@@ -300,12 +296,109 @@ public class SapphireService {
 		JSONObject reply = new JSONObject();
 		if(result)
 		{
-			reply.put("message", "Resource "+appID+"has been created/updated successfully");
+			reply.put("message", "App "+appID+"has been created/updated successfully");
 		}
 		else
 		{
 			String JsonErrorMessage = mapper.writeValueAsString(new ErrorHandler("Unexpected error while "
 					+ "creating/updating app resource",500));
+			throw new AppExceptionMapper(Response.Status.INTERNAL_SERVER_ERROR,JsonErrorMessage);
+		}
+		
+		return reply.toJSONString();
+	}
+	
+	/**
+	 * The service method for creating/updating a new layout.
+	 * @return JSONMessage - The appsearch settings json.
+	 * @throws Exception 
+	 */
+	public String layoutRouteSave(String JSONBody, String layoutId) throws Exception
+	{
+		ObjectMapper mapper = new ObjectMapper();
+		
+		if(factory == null)
+		{
+			LOG.error("Error while instantiating the factory object");
+			
+			String JsonErrorMessage = "";
+			try 
+			{
+				JsonErrorMessage = mapper.writeValueAsString(new ErrorHandler("Unexpected error while"
+																	+ "instantiating factory object",500));
+			} 
+			catch(Exception e)
+			{
+				LOG.error("Json write error in SapphireService::layoutRouteSave::Line No 336",e);
+				e.printStackTrace();
+			}
+			
+			throw new AppExceptionMapper(Response.Status.INTERNAL_SERVER_ERROR,JsonErrorMessage);
+		}
+		
+		if(isJSONValid(JSONBody) == false)
+		{
+			throw new WebApplicationException(400);
+		}
+		
+		LayoutDao layoutdao = factory.getLayoutDAO();
+		boolean result = layoutdao.update(JSONBody, layoutId);
+		
+		JSONObject reply = new JSONObject();
+		if(result)
+		{
+			reply.put("message", "Layout "+layoutId+"has been created/updated successfully");
+		}
+		else
+		{
+			String JsonErrorMessage = mapper.writeValueAsString(new ErrorHandler("Unexpected error while "
+					+ "creating/updating layout resource",500));
+			throw new AppExceptionMapper(Response.Status.INTERNAL_SERVER_ERROR,JsonErrorMessage);
+		}
+		
+		return reply.toJSONString();
+	}
+	
+	/**
+	 * The service method for creating/updating a new layout.
+	 * @return JSONMessage - The appsearch settings json.
+	 * @throws Exception 
+	 */
+	public String layoutRouteDelete(String layoutId) throws Exception
+	{
+		ObjectMapper mapper = new ObjectMapper();
+		
+		if(factory == null)
+		{
+			LOG.error("Error while instantiating the factory object");
+			
+			String JsonErrorMessage = "";
+			try 
+			{
+				JsonErrorMessage = mapper.writeValueAsString(new ErrorHandler("Unexpected error while"
+																	+ "instantiating factory object",500));
+			} 
+			catch(Exception e)
+			{
+				LOG.error("Json write error in SapphireService::layoutRouteDelete::Line No 383",e);
+				e.printStackTrace();
+			}
+			
+			throw new AppExceptionMapper(Response.Status.INTERNAL_SERVER_ERROR,JsonErrorMessage);
+		}
+		
+		LayoutDao layoutdao = factory.getLayoutDAO();
+		boolean result = layoutdao.delete(layoutId);
+		
+		JSONObject reply = new JSONObject();
+		if(result)
+		{
+			reply.put("message", "Layout "+layoutId+"has been Deleted successfully");
+		}
+		else
+		{
+			String JsonErrorMessage = mapper.writeValueAsString(new ErrorHandler("Unexpected error while "
+					+ "Deleting resource",500));
 			throw new AppExceptionMapper(Response.Status.INTERNAL_SERVER_ERROR,JsonErrorMessage);
 		}
 		

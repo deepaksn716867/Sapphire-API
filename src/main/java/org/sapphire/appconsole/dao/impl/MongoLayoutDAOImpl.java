@@ -122,7 +122,8 @@ public class MongoLayoutDAOImpl extends BaseDao implements LayoutDao {
 	public boolean update (String layoutJson, String Id) throws Exception {
 		LOG.debug("LayoutDaoImpl::get called update :: " + Id);
 		try {
-			String layoutID = Id.substring(1);
+			//String layoutID = Id.substring(1);
+			String layoutID = Id.substring(0); //Changing this while porting from jboss fuse to apache jersey java api.
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
