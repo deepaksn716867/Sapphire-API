@@ -116,7 +116,8 @@ public class MongoAppDAOImpl extends BaseDao implements AppDao {
 	public boolean update(String appJson, String Id) throws Exception {
 		LOG.debug("AppDaoImpl::update called for component ID ",  Id);
 		try {
-			String appID = Id.substring(1);
+			//String appID = Id.substring(1); // In Apache camel , the string had a leading '/' but jersey handles it differently.
+			String appID = Id.substring(0);
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			App app = mapper.readValue(appJson, App.class);

@@ -1,15 +1,22 @@
 package org.sapphire.appconsole.service;
 
+import java.io.IOException;
+
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.sapphire.appconsole.dao.AppDao;
 import org.sapphire.appconsole.dao.DAOFactory;
 import org.sapphire.appconsole.dao.LayoutDao;
 import org.sapphire.appconsole.dao.WidgetDao;
 import org.sapphire.appconsole.errorHandler.AppExceptionMapper;
 import org.sapphire.appconsole.errorHandler.ErrorHandler;
+import org.codehaus.jackson.map.DeserializationConfig;
 
 
 /**
@@ -252,6 +259,76 @@ public class SapphireService {
 			e.printStackTrace();
 		}
 		return widgetEventAction;
+	}
+	
+	/**
+	 * The service method for creating/updating a new app.
+	 * @return JSONMessage - The appsearch settings json.
+	 * @throws Exception 
+	 */
+	public String appRouteSave(String JSONBody, String appID) throws Exception
+	{
+		ObjectMapper mapper = new ObjectMapper();
+		
+		if(factory == null)
+		{
+			LOG.error("Error while instantiating the factory object");
+			
+			String JsonErrorMessage = "";
+			try 
+			{
+				JsonErrorMessage = mapper.writeValueAsString(new ErrorHandler("Unexpected error while"
+																	+ "instantiating factory object",500));
+			} 
+			catch(Exception e)
+			{
+				LOG.error("Json write error in SapphireService::appRouteSave::Line No 279",e);
+				e.printStackTrace();
+			}
+			
+			throw new AppExceptionMapper(Response.Status.INTERNAL_SERVER_ERROR,JsonErrorMessage);
+		}
+		
+		if(isJSONValid(JSONBody) == false)
+		{
+			throw new WebApplicationException(400);
+		}
+		
+		AppDao appDAO = factory.getAppDAO();
+		boolean result = appDAO.update(JSONBody, appID);
+		
+		JSONObject reply = new JSONObject();
+		if(result)
+		{
+			reply.put("message", "Resource "+appID+"has been created/updated successfully");
+		}
+		else
+		{
+			String JsonErrorMessage = mapper.writeValueAsString(new ErrorHandler("Unexpected error while "
+					+ "creating/updating app resource",500));
+			throw new AppExceptionMapper(Response.Status.INTERNAL_SERVER_ERROR,JsonErrorMessage);
+		}
+		
+		return reply.toJSONString();
+	}
+	
+	/**
+	 * To check if the json string is a valid json or not.
+	 * @param jsonString
+	 * @return a boolean
+	 */
+	public static boolean isJSONValid(String jsonString) {
+		try 
+		{
+			JSONParser parser = new JSONParser();
+			parser.parse(jsonString);
+			return true;
+	    } 
+		catch (Exception e) 
+		{
+			System.out.println("Gonna return false");
+			return false;
+	    }
 	}
 
 }

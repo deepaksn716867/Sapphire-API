@@ -6,7 +6,7 @@
 </welcome-file-list>
 <filter>
   <filter-name>CORS</filter-name>
-  <filter-class>com.thetransactioncompany.cors.CORSFilter</filter-class>
+  <filter-class>org.sapphire.appconsole.resource.CorsFilters</filter-class>
 </filter>
 <filter-mapping>
       <filter-name>CORS</filter-name>
