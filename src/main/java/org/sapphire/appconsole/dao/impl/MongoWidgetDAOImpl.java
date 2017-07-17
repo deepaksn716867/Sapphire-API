@@ -171,7 +171,8 @@ public class MongoWidgetDAOImpl extends BaseDao implements WidgetDao {
 	public boolean update (String widgetJson, String Id) throws Exception {
 		LOG.debug("WidgetDaoImpl::get called update :: " + Id);
 		try {
-			String widgetId = Id.substring(1);
+			//String widgetId = Id.substring(1);
+			String widgetId = Id.substring(0); //changing this, as the the path param does not have the / as like in Apache camel.
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			Widget widget = mapper.readValue(widgetJson, Widget.class);

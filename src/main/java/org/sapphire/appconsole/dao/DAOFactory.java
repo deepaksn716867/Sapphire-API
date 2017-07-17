@@ -29,7 +29,7 @@ public abstract class DAOFactory {
 	public abstract AppDao getAppDAO() throws Exception;
 	public abstract LayoutDao getLayoutDAO() throws Exception;
 	public abstract WidgetDao getWidgetDAO() throws Exception;
-	public abstract WidgetSettingOptionDao getWidgetSettingOptionDAO();
+	public abstract WidgetSettingOptionDao getWidgetSettingOptionDAO() throws Exception;
 	private final static Logger LOG = Logger.getLogger(DAOFactory.class) ;
 	
 	public static Properties getDAOProperties() {

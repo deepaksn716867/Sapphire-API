@@ -41,7 +41,7 @@ public class MongoDAOFactory extends DAOFactory{
 	}
 
 	@Override
-	public WidgetSettingOptionDao getWidgetSettingOptionDAO() {
+	public WidgetSettingOptionDao getWidgetSettingOptionDAO() throws Exception {
 		// TODO Auto-generated method stub
 		return new MongoWidgetSettingOptionDAOImpl();
 		

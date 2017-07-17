@@ -11,8 +11,11 @@ import org.sapphire.appconsole.dao.AppDao;
 import org.sapphire.appconsole.dao.DAOFactory;
 import org.sapphire.appconsole.dao.LayoutDao;
 import org.sapphire.appconsole.dao.WidgetDao;
+import org.sapphire.appconsole.dao.WidgetSettingOptionDao;
+import org.sapphire.appconsole.dao.exception.ResourceNotFoundException;
 import org.sapphire.appconsole.errorHandler.AppExceptionMapper;
 import org.sapphire.appconsole.errorHandler.ErrorHandler;
+import org.sapphire.appconsole.model.WidgetSettingOption;
 
 
 /**
@@ -85,6 +88,58 @@ public class SapphireService {
 			// TODO Auto-generated catch block
 			LOG.error("Json write error in SapphireService::appRouteSearch::87",e);
 			e.printStackTrace();
+			throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+		}
+		
+		return searchList;
+	}
+	
+	/**
+	 * The service method for handling the app route search.
+	 * @return searchList - The appsearch settings json.
+	 * @throws Exception 
+	 */
+	public String appRouteGet(String appID) throws Exception
+	{
+		
+		if(factory == null)
+		{
+			LOG.error("Error while instantiating the factory object");
+			ObjectMapper mapper = new ObjectMapper();
+			
+			String JsonErrorMessage = "";
+			try 
+			{
+				JsonErrorMessage = mapper.writeValueAsString(new ErrorHandler("Unexpected error while"
+																	+ "instantiating factory object",500));
+			} 
+			catch(Exception e)
+			{
+				LOG.error("Json write error in SapphireService::appRouteGet::Line No 116",e);
+				e.printStackTrace();
+			}
+			
+			throw new AppExceptionMapper(Response.Status.INTERNAL_SERVER_ERROR,JsonErrorMessage);
+		}
+		
+		AppDao appDAO = factory.getAppDAO();
+		String searchList = null;
+		try 
+		{
+			ObjectMapper mapper = new ObjectMapper();
+			searchList = mapper.writeValueAsString(appDAO.get(appID));
+			
+		}
+		catch(ResourceNotFoundException e)
+		{
+			LOG.error("Resource Not found Exception");
+			throw new WebApplicationException(Response.Status.NOT_FOUND);
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			LOG.error("Json write error in SapphireService::appRouteGet::145",e);
+			e.printStackTrace();
+			throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
 		}
 		
 		return searchList;
@@ -127,6 +182,7 @@ public class SapphireService {
 			// TODO Auto-generated catch block
 			LOG.error("Json write error in SapphireService::widgetRouteSearch::124",e);
 			e.printStackTrace();
+			throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
 		}
 		
 		return widgetSearchList;
@@ -169,6 +225,7 @@ public class SapphireService {
 			// TODO Auto-generated catch block
 			LOG.error("Json write error in SapphireService::layoutRouteSearch::167",e);
 			e.printStackTrace();
+			throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
 		}
 		
 		return layoutSearchList;
@@ -211,6 +268,7 @@ public class SapphireService {
 			// TODO Auto-generated catch block
 			LOG.error("Json write error in SapphireService::widgetRouteEventAction::209",e);
 			e.printStackTrace();
+			throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
 		}
 		
 		return widgetEventOption;
@@ -253,6 +311,7 @@ public class SapphireService {
 			// TODO Auto-generated catch block
 			LOG.error("Json write error in SapphireService::widgetRouteEventAction::251",e);
 			e.printStackTrace();
+			throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
 		}
 		return widgetEventAction;
 	}
@@ -360,8 +419,8 @@ public class SapphireService {
 	}
 	
 	/**
-	 * The service method for creating/updating a new layout.
-	 * @return JSONMessage - The appsearch settings json.
+	 * The service method for deleting a layout.
+	 * @return JSONMessage - The delete message json.
 	 * @throws Exception 
 	 */
 	public String layoutRouteDelete(String layoutId) throws Exception
@@ -404,6 +463,194 @@ public class SapphireService {
 		
 		return reply.toJSONString();
 	}
+	
+	/**
+	 * The service method for deleting a new app.
+	 * @return JSONMessage - The delete message JSON.
+	 * @throws Exception 
+	 */
+	public String appRouteDelete(String appId) throws Exception
+	{
+		ObjectMapper mapper = new ObjectMapper();
+		
+		if(factory == null)
+		{
+			LOG.error("Error while instantiating the factory object");
+			
+			String JsonErrorMessage = "";
+			try 
+			{
+				JsonErrorMessage = mapper.writeValueAsString(new ErrorHandler("Unexpected error while"
+																	+ "instantiating factory object",500));
+			} 
+			catch(Exception e)
+			{
+				LOG.error("Json write error in SapphireService::appRouteDelete::Line No 429",e);
+				e.printStackTrace();
+			}
+			
+			throw new AppExceptionMapper(Response.Status.INTERNAL_SERVER_ERROR,JsonErrorMessage);
+		}
+		
+		AppDao appdao = factory.getAppDAO();
+		boolean result = appdao.delete(appId);
+		
+		JSONObject reply = new JSONObject();
+		if(result)
+		{
+			reply.put("message", "App "+appId+"has been deleted successfully");
+		}
+		else
+		{
+			String JsonErrorMessage = mapper.writeValueAsString(new ErrorHandler("Unexpected error while "
+					+ "Deleting resource",500));
+			throw new AppExceptionMapper(Response.Status.INTERNAL_SERVER_ERROR,JsonErrorMessage);
+		}
+		
+		return reply.toJSONString();
+	}
+	
+	/**
+	 * The service method for creating/updating a new widget.
+	 * @return JSONMessage - The appsearch settings json.
+	 * @throws Exception 
+	 */
+	public String widgetRouteSave(String JSONBody, String widgetId) throws Exception
+	{
+		ObjectMapper mapper = new ObjectMapper();
+		
+		if(factory == null)
+		{
+			LOG.error("Error while instantiating the factory object");
+			
+			String JsonErrorMessage = "";
+			try 
+			{
+				JsonErrorMessage = mapper.writeValueAsString(new ErrorHandler("Unexpected error while"
+																	+ "instantiating factory object",500));
+			} 
+			catch(Exception e)
+			{
+				LOG.error("Json write error in SapphireService::widgetRouteSave::Line No 475",e);
+				e.printStackTrace();
+			}
+			
+			throw new AppExceptionMapper(Response.Status.INTERNAL_SERVER_ERROR,JsonErrorMessage);
+		}
+		
+		if(isJSONValid(JSONBody) == false)
+		{
+			throw new WebApplicationException(400);
+		}
+		
+		WidgetDao widgetdao = factory.getWidgetDAO();
+		boolean result = widgetdao.update(JSONBody, widgetId);
+		
+		JSONObject reply = new JSONObject();
+		if(result)
+		{
+			reply.put("message", "widget "+widgetId+" has been created/updated successfully");
+		}
+		else
+		{
+			String JsonErrorMessage = mapper.writeValueAsString(new ErrorHandler("Unexpected error while "
+					+ "creating/updating widget resource",500));
+			throw new AppExceptionMapper(Response.Status.INTERNAL_SERVER_ERROR,JsonErrorMessage);
+		}
+		
+		return reply.toJSONString();
+	}
+	
+	/**
+	 * The service method for deleting a widget.
+	 * @return JSONMessage - The delete message json.
+	 * @throws Exception 
+	 */
+	public String widgetRouteDelete(String widgetId) throws Exception
+	{
+		ObjectMapper mapper = new ObjectMapper();
+		
+		if(factory == null)
+		{
+			LOG.error("Error while instantiating the factory object");
+			
+			String JsonErrorMessage = "";
+			try 
+			{
+				JsonErrorMessage = mapper.writeValueAsString(new ErrorHandler("Unexpected error while"
+																	+ "instantiating factory object",500));
+			} 
+			catch(Exception e)
+			{
+				LOG.error("Json write error in SapphireService::widgetRouteDelete::Line No 526",e);
+				e.printStackTrace();
+			}
+			
+			throw new AppExceptionMapper(Response.Status.INTERNAL_SERVER_ERROR,JsonErrorMessage);
+		}
+		
+		WidgetDao widgetDao = factory.getWidgetDAO();
+		boolean result = widgetDao.delete(widgetId);
+		
+		JSONObject reply = new JSONObject();
+		if(result)
+		{
+			reply.put("message", "Widget "+widgetId+" has been Deleted successfully");
+		}
+		else
+		{
+			String JsonErrorMessage = mapper.writeValueAsString(new ErrorHandler("Unexpected error while "
+					+ "Deleting resource",500));
+			throw new AppExceptionMapper(Response.Status.INTERNAL_SERVER_ERROR,JsonErrorMessage);
+		}
+		
+		return reply.toJSONString();
+	}
+	
+	/**
+	 * The service method for handling the widgetsetting route search.
+	 * @return searchList - The appsearch settings json.
+	 * @throws Exception 
+	 */
+	public String widgetSettingRouteSearch() throws Exception
+	{
+		
+		if(factory == null)
+		{
+			LOG.error("Error while instantiating the factory object");
+			ObjectMapper mapper = new ObjectMapper();
+			
+			String JsonErrorMessage = "";
+			try 
+			{
+				JsonErrorMessage = mapper.writeValueAsString(new ErrorHandler("Unexpected error while"
+																	+ "instantiating factory object",500));
+			} 
+			catch(Exception e)
+			{
+				LOG.error("Json write error in SapphireService::widgetSettingRouteSearch::Line No 572",e);
+				e.printStackTrace();
+			}
+			
+			throw new AppExceptionMapper(Response.Status.INTERNAL_SERVER_ERROR,JsonErrorMessage);
+		}
+		
+		WidgetSettingOptionDao widgetSettingOption = factory.getWidgetSettingOptionDAO();
+		String searchList = null;
+		try 
+		{
+			ObjectMapper mapper = new ObjectMapper();
+			searchList = mapper.writeValueAsString(widgetSettingOption.list());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			LOG.error("Json write error in SapphireService::widgetSettingRouteSearch::87",e);
+			e.printStackTrace();
+			throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+		}
+		
+		return searchList;
+	}
+	
 	
 	/**
 	 * To check if the json string is a valid json or not.
