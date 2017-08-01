@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 
 import com.sun.jersey.api.client.ClientResponse;
@@ -13,7 +14,14 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.test.framework.AppDescriptor;
 import com.sun.jersey.test.framework.JerseyTest;
 import com.sun.jersey.test.framework.WebAppDescriptor;
+import org.junit.runners.MethodSorters;
 
+/**
+ * This is the test class for the app route.
+ * This class has unconventional naming scheme for methods for making it run in sequence.
+ * @author deepak
+ */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class AppRouteTest extends JerseyTest {
 	
 	private WebResource webResource = null;
@@ -36,14 +44,14 @@ public class AppRouteTest extends JerseyTest {
     
     //This method is for testing the app search functionality.
     @Test
-    public void appSearchTest() {
+    public void aSearchTest() {
 		ClientResponse output = webResource.path("/appconsole-api/rest/app/search").head();
         assertEquals("should return status 200", 200, output.getStatus());
     }
     
     //This method is for testing the app save functionality.
     @Test
-    public void appSaveTest() throws Exception {
+    public void bSaveTest() throws Exception {
     	
     	String appSaveTestjson = "";
     	ClassLoader classLoader = getClass().getClassLoader();
@@ -75,7 +83,7 @@ public class AppRouteTest extends JerseyTest {
     
     //We are gonna get the app json we saved in the previous save test. 
     @Test
-    public void appGetTest() throws Exception {
+    public void cGetTest() throws Exception {
     	
     	//Gonna make the GET request.
     	ClientResponse output = null;
@@ -103,6 +111,17 @@ public class AppRouteTest extends JerseyTest {
 	}
 	
 	assertEquals("json does not match",appGetTestjson,output.getEntity(String.class));
+    }
+    
+    @Test
+    public void dDeleteTest() throws Exception
+    {
+	     //Gonna make the DELETE request.
+	    	ClientResponse output = null;
+		output = webResource.path("/appconsole-api/rest/app/b594afad-1e6c-42c4-d58c-715c62cfdfc").delete(ClientResponse.class);
+		
+		assertEquals("Status code does not match", 200, output.getStatus());
+    	
     }
     
 }

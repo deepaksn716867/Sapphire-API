@@ -15,7 +15,6 @@ import org.sapphire.appconsole.dao.WidgetSettingOptionDao;
 import org.sapphire.appconsole.dao.exception.ResourceNotFoundException;
 import org.sapphire.appconsole.errorHandler.AppExceptionMapper;
 import org.sapphire.appconsole.errorHandler.ErrorHandler;
-import org.sapphire.appconsole.model.WidgetSettingOption;
 
 
 /**
