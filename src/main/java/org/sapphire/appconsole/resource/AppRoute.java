@@ -14,13 +14,17 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
+import org.sapphire.appconsole.model.App;
 import org.sapphire.appconsole.service.SapphireService;
+
+import io.swagger.annotations.*;
 
 /**
  * @author deepak
  *
  */
 @Path("/app/")
+@Api(tags = {"app"})
 public class AppRoute {
 	
 	private final static Logger LOG = Logger.getLogger(AppRoute.class) ;
@@ -35,6 +39,12 @@ public class AppRoute {
 	@GET
 	@Path("/search/")
 	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Get all the apps", 
+    notes = "Returns all the Apps or if not will return an error",
+    response = App.class)
+	@ApiResponses(value = { @ApiResponse(code = 500, message = "Internal Server Error"),
+	@ApiResponse(code = 404, message = "Apps not found"),
+	@ApiResponse(code = 200 , message = "Success")})
 	public Response appRouteSearch() throws Exception
 	{
 		LOG.info("Request Received for /app/search");
@@ -63,7 +73,14 @@ public class AppRoute {
 	@Path("/{appid}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response appRouteSave(String httpBody, @PathParam("appid") String appID) throws Exception
+	@ApiOperation(value = "Save an App", 
+    notes = "Creates a New App or Updates an existing App",
+    response = App.class)
+	@ApiResponses(value = { 
+	@ApiResponse(code = 500, message = "Internal Server Error"),
+	@ApiResponse(code = 404, message = "App not found"),
+	@ApiResponse(code = 201 , message = "App Successfully created/updated")})
+	public Response appRouteSave(@ApiParam(value="The HTTP App Create/update Body",required = true)String httpBody, @ApiParam(value="The App id which needs to be created/updated",required = true)@PathParam("appid") String appID) throws Exception
 	{
 		LOG.info("Request Received for creating/updating /app/{id}");
 		
@@ -91,7 +108,13 @@ public class AppRoute {
 	@DELETE
 	@Path("/{appid}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response appRouteDelete(@PathParam("appid") String appID) throws Exception
+	@ApiOperation(value = "Delete an App", 
+    notes = "Deletes a particular app with the given app id",
+    response = String.class)
+	@ApiResponses(value= {@ApiResponse(code = 200, message = "Successfully deleted the app"),
+	@ApiResponse(code = 404 , message="Cannot find the App with the given APP ID"),
+	@ApiResponse(code = 500 , message = "Internal server error")})
+	public Response appRouteDelete(@ApiParam(value="The app id to be deleted" , required = true) @PathParam("appid") String appID) throws Exception
 	{
 		LOG.info("Request Received for Deleting /app/{id}");
 		
@@ -120,6 +143,12 @@ public class AppRoute {
 	@GET
 	@Path("/{appid}")
 	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Get a particular App", 
+    notes = "Get the App settings of a particular App",
+    response = String.class)
+	@ApiResponses(value= {@ApiResponse(code = 200, message = "Successfully retreived the app settings"),
+	@ApiResponse(code = 404 , message="Cannot find the App with the given APP ID"),
+	@ApiResponse(code = 500 , message = "Internal server error")})
 	public Response appRouteGet(@PathParam("appid") String appID) throws Exception
 	{
 		LOG.info("Request Received for GET /app/{id}");

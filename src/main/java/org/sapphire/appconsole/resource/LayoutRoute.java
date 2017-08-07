@@ -11,7 +11,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
+import org.sapphire.appconsole.model.App;
+import org.sapphire.appconsole.model.Layout;
 import org.sapphire.appconsole.service.SapphireService;
+
+import io.swagger.annotations.*;
 
 /**
  * This is the class for the layout route resource.
@@ -19,6 +23,7 @@ import org.sapphire.appconsole.service.SapphireService;
  *
  */
 @Path("/layout/")
+@Api(tags = {"layout"})
 public class LayoutRoute {
 
 	public LayoutRoute() {
@@ -30,6 +35,13 @@ private final static Logger LOG = Logger.getLogger(WidgetRoute.class) ;
 	@GET
 	@Path("/search/")
 	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Get all the Layouts", 
+    notes = "Returns all the associated layouts",
+    response = Layout.class)
+	@ApiResponses(value = { 
+	@ApiResponse(code = 500, message = "Internal Server Error"),
+	@ApiResponse(code = 404, message = "Layout not found"),
+	@ApiResponse(code = 200, message = "Success")})
 	public Response layoutRouteSearch() throws Exception
 	{
 		LOG.info("Request Received for /layout/search");
@@ -58,7 +70,13 @@ private final static Logger LOG = Logger.getLogger(WidgetRoute.class) ;
 	@Path("/{layoutid}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response layoutRouteSave(String httpBody, @PathParam("layoutid") String layoutID) throws Exception
+	@ApiOperation(value = "Create / Update a Layout", 
+    notes = "Create a new layout or update an existing one")
+	@ApiResponses(value = { 
+	@ApiResponse(code = 500, message = "Internal Server Error"),
+	@ApiResponse(code = 404, message = "Layout cannot be created / updated"),
+	@ApiResponse(code = 201, message = "Successfully created a new layout")})
+	public Response layoutRouteSave(@ApiParam(value="Layout Body",required = true) String httpBody,@ApiParam(value="Layout ID to be created / updated",required = true) @PathParam("layoutid") String layoutID) throws Exception
 	{
 		LOG.info("Request Received for creating/updating /layout/{id}");
 		
@@ -86,6 +104,12 @@ private final static Logger LOG = Logger.getLogger(WidgetRoute.class) ;
 	@DELETE
 	@Path("/{layoutid}")
 	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Delete a Layout",
+    notes = "Delete a Layout with the given layout ID")
+	@ApiResponses(value = { 
+	@ApiResponse(code = 500, message = "Internal Server Error"),
+	@ApiResponse(code = 404, message = "Layout cannot be found"),
+	@ApiResponse(code = 200, message = "Successfully deleted the layout")})
 	public Response layoutRouteDelete(@PathParam("layoutid") String layoutID) throws Exception
 	{
 		LOG.info("Request Received for Deleting /layout/{id}");

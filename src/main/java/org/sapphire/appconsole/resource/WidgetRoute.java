@@ -11,9 +11,17 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
+import org.sapphire.appconsole.model.Widget;
 import org.sapphire.appconsole.service.SapphireService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 @Path("/widget/")
+@Api(tags = {"widget"})                                                                                                                                                                                                                                                                                                         
 public class WidgetRoute {
 
 	/**
@@ -29,6 +37,13 @@ public class WidgetRoute {
 	@GET
 	@Path("/search/")
 	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Get all the widgets", 
+    notes = "Returns all the Widgets associated with the App",
+    response = Widget.class)
+	@ApiResponses(value = { 
+	@ApiResponse(code = 500, message = "Internal Server Error"),
+	@ApiResponse(code = 404, message = "Widget not found"),
+	@ApiResponse(code = 200 , message = "Success")})
 	public Response widgetRouteSearch() throws Exception
 	{
 		LOG.info("Request Received for /widget/search");
@@ -56,6 +71,12 @@ public class WidgetRoute {
 	@GET
 	@Path("/eventoptions/")
 	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Get the widget Event Options", 
+    notes = "Returns the Widgets Event Options associated with the App")
+	@ApiResponses(value = { 
+	@ApiResponse(code = 500, message = "Internal Server Error"),
+	@ApiResponse(code = 404, message = "Widget Event Options not found"),
+	@ApiResponse(code = 200 , message = "Success")})
 	public Response widgetRouteEventOptions() throws Exception
 	{
 		LOG.info("Request Received for /widget/eventoptions");
@@ -83,6 +104,12 @@ public class WidgetRoute {
 	@GET
 	@Path("/eventactions/")
 	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Get the widgets Event Actions", 
+    notes = "Returns the Widgets Event actions associated with the App")
+	@ApiResponses(value = { 
+	@ApiResponse(code = 500, message = "Internal Server Error"),
+	@ApiResponse(code = 404, message = "Widget Event Action not found"),
+	@ApiResponse(code = 200 , message = "Success")})
 	public Response widgetRouteEventActions() throws Exception
 	{
 		LOG.info("Request Received for /widget/eventaction");
@@ -111,7 +138,13 @@ public class WidgetRoute {
 	@Path("/{widgetid}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response widgetRouteSave(String httpBody, @PathParam("widgetid") String widgetID) throws Exception
+	@ApiOperation(value = "Create / Update a Widget", 
+    notes = "Create a new widget or update an existing one")
+	@ApiResponses(value = { 
+	@ApiResponse(code = 500, message = "Internal Server Error"),
+	@ApiResponse(code = 404, message = "Widget not created/Updated"),
+	@ApiResponse(code = 201 , message = "Successfully created a new widget / Updated an existing one")})
+	public Response widgetRouteSave(@ApiParam(value = "The Widget JSON", required = true) String httpBody,@ApiParam(value = "The Widget ID to be created / Updated", required = true) @PathParam("widgetid") String widgetID) throws Exception
 	{
 		LOG.info("Request Received for creating/updating /widget/{id}");
 		
@@ -139,7 +172,13 @@ public class WidgetRoute {
 	@DELETE
 	@Path("/{widgetid}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response widgetRouteDelete(@PathParam("widgetid") String widgetID) throws Exception
+	@ApiOperation(value = "Delete a Widget", 
+    notes = "Delete a widget associated with the App")
+	@ApiResponses(value = { 
+	@ApiResponse(code = 500, message = "Internal Server Error"),
+	@ApiResponse(code = 404, message = "Widget not Deleted"),
+	@ApiResponse(code = 200 , message = "Successfully created a new widget / Updated an existing one")})
+	public Response widgetRouteDelete(@ApiParam(value = "The widget ID to be deleted", required = true) @PathParam("widgetid") String widgetID) throws Exception
 	{
 		LOG.info("Request Received for Deleting /widget/{id}");
 		

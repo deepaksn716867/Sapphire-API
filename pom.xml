@@ -102,8 +102,13 @@
 			<artifactId>org.apache.commons.io</artifactId>
 			<version>2.4</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>io.swagger</groupId>
+			<artifactId>swagger-jersey2-jaxrs</artifactId>
+			<version>1.5.16</version>
+		</dependency>
 	</dependencies>
-
 	<build>
 		<finalName>appconsole-api</finalName>
 		<resources>
@@ -114,8 +119,8 @@
 				</includes>
 			</resource>
 			<resource>
-       			<directory>src/main/resources</directory>
-     		</resource>
+				<directory>src/main/resources</directory>
+			</resource>
 		</resources>
 		<plugins>
 			<plugin>

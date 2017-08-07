@@ -7,9 +7,16 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
+import org.sapphire.appconsole.model.WidgetSettingOption;
 import org.sapphire.appconsole.service.SapphireService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 @Path("/widgetsettingoption")
+@Api(tags= {"widgetsettingoption"})
 public class WidgetSettingsRoute {
 	
 private final static Logger LOG = Logger.getLogger(WidgetRoute.class) ;
@@ -17,6 +24,13 @@ private final static Logger LOG = Logger.getLogger(WidgetRoute.class) ;
 	@GET
 	@Path("/search/")
 	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Get all the widget settings options", 
+    notes = "Returns all the Widget settings options associated with the App",
+    response = WidgetSettingOption.class)
+	@ApiResponses(value = { 
+	@ApiResponse(code = 500, message = "Internal Server Error"),
+	@ApiResponse(code = 404, message = "Widget Settings not found"),
+	@ApiResponse(code = 200 , message = "Success")})
 	public Response widgetSettingsRouteSearch() throws Exception
 	{
 		LOG.info("Request Received for /widgetSettings/search");
